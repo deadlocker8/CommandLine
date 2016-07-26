@@ -1,4 +1,4 @@
 # CommandLine
 Simple CommandLineInterface for your JavaFX Projects
 
-## [Instructions](Home)
+## [Instructions](https://github.com/deadlocker8/CommandLine/wiki)
