@@ -1,16 +1,15 @@
 package commands;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import application.Controller;
-
+/**
+ * abstract class Command
+ * @author deadlocker8
+ *
+ */
 public abstract class Command
 {
 	public String keyword;
 	public int numberOfParams;
-	public String helptText;
-	public final ResourceBundle bundle = ResourceBundle.getBundle("application/", Locale.GERMANY);		
+	public String helptText;	
 	
 	public String getKeyword()
 	{
@@ -39,5 +38,5 @@ public abstract class Command
 		}
 	}
 	
-	public abstract void execute(String[] command, Controller controller);	
+	public abstract void execute(String[] command, CommandBundle bundle);	
 }

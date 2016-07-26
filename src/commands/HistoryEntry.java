@@ -1,5 +1,10 @@
 package commands;
 
+/**
+ * Entry in the history log
+ * @author deadlocker8
+ *
+ */
 public class HistoryEntry
 {
 	private HistoryType type;

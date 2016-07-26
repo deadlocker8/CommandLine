@@ -3,8 +3,11 @@ package commands;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import application.Controller;
-
+/**
+ * Lists all available commands
+ * @author deadlocker8
+ *
+ */
 public class CommandList extends Command
 {
 	public CommandList()
@@ -16,14 +19,15 @@ public class CommandList extends Command
 	}
 
 	@Override
-	public void execute(String[] command, Controller controller)
+	public void execute(String[] command, CommandBundle bundle)
 	{		
 		if(!isValid(command))
 		{			
-			controller.print(bundle.getString("error.invalid.arguments"));
+			bundle.getController().print(bundle.getLanguageBundle().getString("error.invalid.arguments"));
 			return;
 		}
 		
+		//sort possible commands alphabetically
 		ArrayList<Command> commands = PossibleCommands.possibleCommands;
 		commands.sort(new Comparator<Command>()
 		{
@@ -34,6 +38,7 @@ public class CommandList extends Command
 			}
 		});
 		
+		//loop through all possible commands and print keyword
 		StringBuilder sb = new StringBuilder();	
 		sb.append("All possible commands:\n");
 		for(int i = 0; i < commands.size(); i++)
@@ -45,6 +50,6 @@ public class CommandList extends Command
 			}
 		}
 		
-		controller.print(sb.toString());			
+		bundle.getController().print(sb.toString());			
 	}
 }

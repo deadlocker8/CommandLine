@@ -1,41 +1,37 @@
-package application;
+package commandLine;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
-import commands.PossibleCommands;
 import commands.Command;
 import commands.HistoryEntry;
 import commands.HistoryType;
+import commands.PossibleCommands;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 
-public class Controller
+/**
+ * Controller for the CommandLine stage
+ * @author deadlocker8
+ *
+ */
+public class CommandLineController
 {
 	@FXML private TextArea textareaHistory;
 	@FXML private TextField textfieldInput;
 	
-	public Stage stage;		
-	private final ResourceBundle bundle = ResourceBundle.getBundle("application/", Locale.GERMANY);
+	private CommandLine commandLine; 
 	
-	private ArrayList<HistoryEntry> globalHistory = new ArrayList<>();
-	private int lastShwonCommand = 1;
-	private ArrayList<HistoryEntry> history = new ArrayList<>();
-	private final String promptText = ">>>";
-
-	public void setStage(Stage stage)
-	{
-		this.stage = stage;
-	}	
-	
-	public void init()
+	public void init(CommandLine commandLine)
 	{	
+		this.commandLine = commandLine;		
+		
+		commandLine.getBundle().setController(this);	
+		commandLine.getBundle().setLanguageBundle(commandLine.getLanguageBundle());	
+		
 		textareaHistory.setEditable(false);
 		textareaHistory.setWrapText(true);		
 		
@@ -59,8 +55,8 @@ public class Controller
 					clearConsole();
 	            }
 			}
-		});	  
-			
+		});	 	
+		
 		printPrompt();		
 	}	
 
@@ -72,7 +68,7 @@ public class Controller
 	
 	public void print(String message)
 	{		
-		history.add(new HistoryEntry(HistoryType.MESSAGE, message));
+		commandLine.history.add(new HistoryEntry(HistoryType.MESSAGE, message));
 		setConsoleText();
 		printPrompt();
 	}
@@ -84,7 +80,7 @@ public class Controller
 	
 	public void clearHistory()
 	{
-		history = new ArrayList<>();
+		commandLine.history = new ArrayList<>();
 	}
 	
 	public void clearConsole()
@@ -99,16 +95,16 @@ public class Controller
 		
 		StringBuilder sb = new StringBuilder();
 		boolean printedLastEntry = false;
-		for(int i = 0; i < history.size(); i++)		
+		for(int i = 0; i < commandLine.history.size(); i++)		
 		{							
-			HistoryEntry currentEntry = history.get(i);
+			HistoryEntry currentEntry = commandLine.history.get(i);
 			if(currentEntry.getType().equals(HistoryType.COMMAND))
 			{				
 				if(printedLastEntry)
 				{
 					sb.append("\n");
 				}
-				sb.append(promptText);
+				sb.append(commandLine.getPromptText());
 				sb.append(" ");
 				sb.append(currentEntry.getText());
 				printedLastEntry = true;
@@ -124,8 +120,8 @@ public class Controller
 			}
 		}	
 		
-		textareaHistory.setText(sb.toString());	
-		textareaHistory.positionCaret(sb.toString().length());
+		textareaHistory.setText(sb.toString());
+		textareaHistory.positionCaret(sb.toString().length());		
 	}
 	
 	private boolean executeCommand(String[] command)
@@ -133,8 +129,8 @@ public class Controller
 		for(Command cmd : PossibleCommands.possibleCommands)
 		{
 			if(cmd.getKeyword().equals(command[0]))
-			{
-				cmd.execute(command, this);		
+			{				
+				cmd.execute(command, commandLine.getBundle());		
 				return true;
 			}
 		}
@@ -151,14 +147,14 @@ public class Controller
 			return;
 		}	
 		
-		globalHistory.add(new HistoryEntry(HistoryType.COMMAND, input));
-		history.add(new HistoryEntry(HistoryType.COMMAND, input));
-		lastShwonCommand = -1;
+		commandLine.globalHistory.add(new HistoryEntry(HistoryType.COMMAND, input));
+		commandLine.history.add(new HistoryEntry(HistoryType.COMMAND, input));
+		commandLine.lastShownCommand = -1;
 		
 		String[] command = input.split(" ");		
 		if(!executeCommand(command))		
 		{
-			print(bundle.getString("error.unknown.command"));			
+			print(commandLine.getLanguageBundle().getString("error.unknown.command"));			
 		}
 		else
 		{
@@ -168,17 +164,17 @@ public class Controller
 	
 	private void showLastCommand()
 	{
-		if(globalHistory.size() > 0)
+		if(commandLine.globalHistory.size() > 0)
 		{
-			if(lastShwonCommand <= 0)
+			if(commandLine.lastShownCommand <= 0)
 			{
-				textfieldInput.setText(globalHistory.get(globalHistory.size()-1).getText());
-				lastShwonCommand = globalHistory.size()-1;
+				textfieldInput.setText(commandLine.globalHistory.get(commandLine.globalHistory.size()-1).getText());
+				commandLine.lastShownCommand = commandLine.globalHistory.size()-1;
 			}
 			else
 			{			
-				textfieldInput.setText(globalHistory.get(lastShwonCommand - 1).getText());
-				lastShwonCommand--;				
+				textfieldInput.setText(commandLine.globalHistory.get(commandLine.lastShownCommand - 1).getText());
+				commandLine.lastShownCommand--;				
 			}
 		}
 	}

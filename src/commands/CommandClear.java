@@ -1,7 +1,10 @@
 package commands;
 
-import application.Controller;
-
+/**
+ * Clears the history log and console
+ * @author deadlocker8
+ *
+ */
 public class CommandClear extends Command
 {
 	public CommandClear()
@@ -12,17 +15,17 @@ public class CommandClear extends Command
 	}
 
 	@Override
-	public void execute(String[] command, Controller controller)
+	public void execute(String[] command, CommandBundle bundle)
 	{		
 		if(!isValid(command))
 		{			
-			controller.print(bundle.getString("error.invalid.arguments"));
+			bundle.getController().print(bundle.getLanguageBundle().getString("error.invalid.arguments"));
 			return;
 		}	
 		
-		controller.clearHistory();
-		controller.clearHistoryLog();
-		controller.clearConsole();		
-		controller.printPrompt();
+		bundle.getController().clearHistory();
+		bundle.getController().clearHistoryLog();
+		bundle.getController().clearConsole();		
+		bundle.getController().printPrompt();
 	}
 }

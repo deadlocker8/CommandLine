@@ -1,7 +1,12 @@
 package commands;
 
-import application.Controller;
+import java.util.MissingResourceException;
 
+/**
+ * prints help for given command
+ * @author deadlocker8
+ *
+ */
 public class CommandHelp extends Command
 {
 	public CommandHelp()
@@ -13,23 +18,30 @@ public class CommandHelp extends Command
 	}
 
 	@Override
-	public void execute(String[] command, Controller controller)
+	public void execute(String[] command, CommandBundle bundle)
 	{		
 		if(!isValid(command))
 		{			
-			controller.print(bundle.getString("error.invalid.arguments"));
+			bundle.getController().print(bundle.getLanguageBundle().getString("error.invalid.arguments"));
 			return;
-		}	
+		}			
 		
 		for(Command cmd : PossibleCommands.possibleCommands)
 		{
 			if(cmd.getKeyword().equals(command[1]))
-			{				
-				controller.print(bundle.getString("help." + command[1]));		
+			{	
+				try
+				{
+					bundle.getController().print(bundle.getLanguageBundle().getString("help." + command[1]));
+				}
+				catch(MissingResourceException e)
+				{
+					bundle.getController().print(bundle.getLanguageBundle().getString("error.general"));
+				}
 				return;
 			}
 		}		
 				
-		controller.print(bundle.getString("error.no.help"));		
+		bundle.getController().print(bundle.getLanguageBundle().getString("error.no.help"));		
 	}
 }
