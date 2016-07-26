@@ -27,11 +27,9 @@ public class Main extends Application
 		
 			stage.setTitle("Test");
 			stage.setScene(scene);
-			stage.setResizable(true);			
+			stage.setResizable(true);						
 			
-			CommandBundle cb = new CommandBundle();			
-			
-			CommandLine cmd = new CommandLine(stage, null, ResourceBundle.getBundle("commandLine/", Locale.GERMANY), cb);
+			CommandLine cmd = new CommandLine(stage, null, ResourceBundle.getBundle("commandLine/", Locale.ENGLISH), new CommandBundle());
 			
 			HBox hbox = new HBox();
 			
@@ -64,7 +62,6 @@ public class Main extends Application
 				}
 			});
 			hbox.getChildren().add(button2);		
-			
 			mainPane.getChildren().add(hbox);
 						
 			stage.show();		
