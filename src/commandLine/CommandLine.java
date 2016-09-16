@@ -57,7 +57,7 @@ public class CommandLine
 	{
 		return lastShownCommand;
 	}
-	
+
 	public String getPromptText()
 	{
 		return promptText;
